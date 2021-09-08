@@ -1,0 +1,8 @@
+LIBRARY "VISADllEx"
+EXPORTS
+
+VisaInit
+VisaClose
+VisaSetAttr
+VisaWrite
+VisaRead
