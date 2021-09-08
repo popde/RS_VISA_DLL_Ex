@@ -1,0 +1,44 @@
+import win.ui;
+/*DSG{{*/
+mainForm = win.form(text="dlltest";right=431;bottom=432)
+mainForm.add(
+button={cls="button";text="write";left=49;top=84;right=301;bottom=148;z=1};
+button2={cls="button";text="read";left=49;top=171;right=301;bottom=235;z=2};
+button3={cls="button";text="set";left=117;top=344;right=369;bottom=408;z=4};
+edit={cls="edit";text="*IDN?";left=49;top=34;right=301;bottom=69;edge=1;z=3}
+)
+/*}}*/
+
+import console
+console.open()
+
+var dll = ..raw.loadDll("\res\VISADllEx.dll","VISADllEx");
+VisaInit = dll.api("VisaInit","bool(string)" );
+VisaClose = dll.api("VisaClose","bool()" );
+VisaWrite = dll.api("VisaWrite","bool(string)" );
+VisaRead = dll.api("VisaRead","string()" );
+VisaSetAttr = dll.api("VisaSetAttr","bool(INT,INT)" );
+
+
+console.log(VisaInit("ASRL1::INSTR"))
+
+mainForm.button.oncommand = function(id,event){
+	console.log(VisaWrite('abc567\n'))
+}
+
+mainForm.button2.oncommand = function(id,event){	
+	console.log(VisaRead())
+}
+
+mainForm.onClose = function(hwnd,message,wParam,lParam){
+    VisaClose()
+}
+
+mainForm.button3.oncommand = function(id,event){
+	console.log(VisaSetAttr(0x3FFF0018, 0x0d))
+	console.log(VisaSetAttr(0x3FFF0016, 0x00))
+	
+}
+
+mainForm.show();
+return win.loopMessage();
