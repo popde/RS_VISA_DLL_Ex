@@ -1,42 +1,75 @@
 import win.ui;
 /*DSG{{*/
-mainForm = win.form(text="dlltest";right=431;bottom=432)
+mainForm = win.form(text="dlltest";right=581;bottom=453)
 mainForm.add(
-button={cls="button";text="write";left=49;top=84;right=301;bottom=148;z=1};
-button2={cls="button";text="read";left=49;top=171;right=301;bottom=235;z=2};
-button3={cls="button";text="set";left=117;top=344;right=369;bottom=408;z=4};
-edit={cls="edit";text="*IDN?";left=49;top=34;right=301;bottom=69;edge=1;z=3}
+VisaGetAttr={cls="button";text="VisaGetAttr";left=403;top=345;right=534;bottom=381;z=8};
+VisaSetAttr={cls="button";text="VisaSetAttr";left=403;top=294;right=534;bottom=326;z=5};
+button={cls="button";text="writeStr";left=26;top=84;right=278;bottom=148;z=1};
+button2={cls="button";text="readStr";left=26;top=171;right=278;bottom=235;z=2};
+button3={cls="button";text="VisaSetAttr";left=406;top=84;right=537;bottom=215;z=9};
+button4={cls="button";text="VisaClear";left=26;top=384;right=157;bottom=448;z=4};
+edit={cls="edit";text="*IDN?";left=26;top=34;right=278;bottom=69;edge=1;z=3};
+name={cls="edit";left=26;top=295;right=205;bottom=326;edge=1;z=6};
+value={cls="edit";left=218;top=295;right=374;bottom=326;edge=1;z=7}
 )
 /*}}*/
 
 import console
 console.open()
-
-var dll = ..raw.loadDll("\res\VISADllEx.dll","VISADllEx");
+  
+var dll = ..raw.loadDll("C:\Users\Huave2\Desktop\VISA_DLL\IdnSample\Release\VISADllEx.dll","VISADllEx");
+VisaRsrc = dll.api("VisaRsrc","int()" );
+VisaGetRsrcString = dll.api("VisaGetRsrcString","string(INT)" );
 VisaInit = dll.api("VisaInit","bool(string)" );
 VisaClose = dll.api("VisaClose","bool()" );
 VisaWrite = dll.api("VisaWrite","bool(string)" );
-VisaRead = dll.api("VisaRead","string()" );
+VisaRead = dll.api("VisaRead","string(WORD)" );
 VisaSetAttr = dll.api("VisaSetAttr","bool(INT,INT)" );
-
-
+VisaGetAttr = dll.api("VisaGetAttr","INT(INT)" );
+VisaClear = dll.api("VisaClear","bool()" );
+ 
+ 
+var count = VisaRsrc();
+ 
+console.log( count )
+for(i=0;count-1;1){
+    console.dump( VisaGetRsrcString(i) )
+}
+ 
 console.log(VisaInit("ASRL1::INSTR"))
+  
+status = VisaSetAttr( 0x3FFF0018, 0x0a);
+      console.log("viSetAttribute3", status )
+      status = VisaSetAttr(0x3FFF0038, 0);
 
+      console.log("viSetAttribute4", status )
+
+      status = VisaSetAttr(0x3FFF00B3, 0);
+      console.log("viSetAttribute5", status )
+  
+  
 mainForm.button.oncommand = function(id,event){
-	console.log(VisaWrite('abc567\n'))
+    console.log(VisaWrite(mainForm.edit.text))
 }
-
-mainForm.button2.oncommand = function(id,event){	
-	console.log(VisaRead())
+  
+mainForm.button2.oncommand = function(id,event){  
+    console.dump(VisaRead(0))
 }
-
+  
 mainForm.onClose = function(hwnd,message,wParam,lParam){
     VisaClose()
 }
 
+
+mainForm.VisaSetAttr.oncommand = function(id,event){
+	console.log( VisaSetAttr((tonumber(mainForm.name.text)), (tonumber(mainForm.value.text))) )
+}
+
+mainForm.VisaGetAttr.oncommand = function(id,event){
+	console.log( VisaGetAttr((tonumber(mainForm.name.text))) )
+}
+
 mainForm.button3.oncommand = function(id,event){
-	console.log(VisaSetAttr(0x3FFF0018, 0x0d))
-	console.log(VisaSetAttr(0x3FFF0016, 0x00))
 	
 }
 
