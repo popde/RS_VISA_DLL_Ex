@@ -54,7 +54,7 @@ public:
   ViUInt32 write(const std::string& msg);
 
   /// reads from the device
-  std::string read();
+  std::string read(uint16_t num);
 
   /// writes formatted output to the device
   void Printf(const std::string writeFmt, ...);
@@ -85,6 +85,9 @@ public:
   
   /// Sets the value of an attribute
   void setAttribute(ViAttr attrName, ViAttrState attrValue);
+
+  /// Gets the value of an attribute
+  ViAttrState getAttribute(ViAttr attrName);
 
   /// Clears the session
   void clear();

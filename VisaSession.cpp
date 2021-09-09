@@ -24,22 +24,30 @@ ViUInt32 VisaSession::write(const std::string& msg)
   return retCnt;
 }
 
-std::string VisaSession::read()
+std::string VisaSession::read(uint16_t num=0)
 {
   static const ViUInt32 buflen = 1024;
- 
+
   std::string result;
 
   ViByte buf[buflen];
   ViUInt32 retCnt;
   ViStatus status = VI_SUCCESS_MAX_CNT;
 
-  while (status == VI_SUCCESS_MAX_CNT)
-  {
-    status = viRead(getVi(), buf, buflen, &retCnt);
-    checkAndThrow(status, "viRead failed");
+ // while (status == VI_SUCCESS_MAX_CNT)
+ // {
+      if (num!=0)
+      {
+          status = viRead(getVi(), buf, num, &retCnt);
+      }
+      else
+      {
+          status = viRead(getVi(), buf, buflen, &retCnt);
+      }
+    
+    //checkAndThrow(status, "viRead failed");
     result.append(reinterpret_cast<char*>(buf), retCnt);
-  }
+ // }
 
   return result;
 }
@@ -114,6 +122,14 @@ void VisaSession::setAttribute(ViAttr attrName, ViAttrState attrValue)
 {
   const ViStatus status = viSetAttribute(getVi(), attrName, attrValue);
   checkAndThrow(status, "viSetAttribute failed");
+}
+
+ViAttrState VisaSession::getAttribute(ViAttr attrName )
+{
+    ViAttrState attrValue = 0;
+	const ViStatus status = viGetAttribute(getVi(), attrName, &attrValue);
+	checkAndThrow(status, "viGetAttribute failed");
+	return attrValue;
 }
 
 void VisaSession::clear()

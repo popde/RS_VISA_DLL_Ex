@@ -51,7 +51,7 @@ public:
 
   /// returns a list of available VISA resources; if VXI11 == true devices are found over
   /// the network via VXI11 and if mDNS == true an mDNS search is invoked
-  devicelist_t findResources(bool VXI11 = true, bool mDNS = true) const;
+  devicelist_t findResources() const;
 
   /// connects to the device with the given VISA resource String and returns a session object
   session_t connect(const std::string& device);

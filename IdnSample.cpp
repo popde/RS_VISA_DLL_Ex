@@ -3,12 +3,26 @@
 
 VisaResourceManager rm;
 VisaResourceManager::session_t mysession;
+VisaResourceManager::devicelist_t availableRsrc;
 ViBoolean initOK = VI_FALSE;
+
+int32_t VisaRsrc() {
+	availableRsrc = rm.findResources();
+	return availableRsrc.size();
+}
+
+const char* VisaGetRsrcString(ViAttr index) {
+	if (index<availableRsrc.size())
+	{
+		return availableRsrc.at(index).VisaResourceString.c_str();
+	}
+	return NULL;
+}
 
 bool VisaInit(const char* deviceName) {
 
 	const std::string TestDevice = deviceName;
-	ViStatus status = VI_FALSE;
+	bool status = VI_FALSE;
 	try
 	{
 		mysession = rm.connect(TestDevice);
@@ -24,7 +38,7 @@ bool VisaInit(const char* deviceName) {
 }
 
 bool VisaClose() {
-	ViStatus status = VI_FALSE;
+	bool status = VI_FALSE;
 	if (initOK)
 	{
 		try
@@ -41,8 +55,25 @@ bool VisaClose() {
 	return status;
 }
 
-bool VisaSetAttr(ViAttr attrName, ViAttrState attrValue) {
-	ViStatus status = VI_FALSE;
+bool VisaClear() {
+	bool status = VI_FALSE;
+	if (initOK)
+	{
+		try
+		{
+			mysession->clear();
+			status = VI_TRUE;
+		}
+		catch (VisaException ex)
+		{
+			status = VI_FALSE;
+		}
+	}
+	return status;
+}
+
+bool VisaSetAttr(ViAttr attrName, uint32_t attrValue) {
+	bool status = VI_FALSE;
 	if (initOK)
 	{
 		try
@@ -58,8 +89,24 @@ bool VisaSetAttr(ViAttr attrName, ViAttrState attrValue) {
 	return status;
 }
 
+uint32_t VisaGetAttr(ViAttr attrName) {
+	uint32_t attrValue = 0;
+	if (initOK)
+	{
+		try
+		{
+			attrValue = mysession->getAttribute(attrName);
+		}
+		catch (VisaException ex)
+		{
+			
+		};
+	}
+	return attrValue;
+}
+
 bool VisaWrite(const char* str) {
-	ViStatus status = VI_FALSE;
+	bool status = VI_FALSE;
 	if (initOK)
 	{
 		try
@@ -72,26 +119,17 @@ bool VisaWrite(const char* str) {
 			status = VI_FALSE;
 		}
 	}
-	
+
 	return status;
 }
 
-const char* VisaRead() {
-	ViStatus status = VI_FALSE;
+const char* VisaRead(uint16_t num) {
 	static std::string readValue;
 	if (initOK)
 	{
-		try
-		{
-			readValue = mysession->read();
-			status = VI_TRUE;
-		}
-		catch (VisaException ex)
-		{
-			status = VI_FALSE;
-		}
+		readValue = mysession->read(num);
 	}
-	
+
 	return readValue.c_str();
 }
 

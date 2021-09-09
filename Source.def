@@ -1,8 +1,12 @@
 LIBRARY "VISADllEx"
 EXPORTS
 
+VisaRsrc
+VisaGetRsrcString
 VisaInit
 VisaClose
 VisaSetAttr
+VisaGetAttr
 VisaWrite
 VisaRead
+VisaClear

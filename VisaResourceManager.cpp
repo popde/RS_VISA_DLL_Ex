@@ -25,23 +25,9 @@ ViSession VisaResourceManager::openRM()
   return result;
 }
 
-VisaResourceManager::devicelist_t VisaResourceManager::findResources(bool VXI11, bool mDNS) const
+VisaResourceManager::devicelist_t VisaResourceManager::findResources() const
 {
   ViStatus status;
-#ifdef RSVISA_EXTENSION
-  ViAttrState searchAttributes = VI_RS_FIND_MODE_CONFIG;
-  if (VXI11)
-  {
-    searchAttributes |= VI_RS_FIND_MODE_VXI11;
-  }
-
-  if (mDNS)
-  {
-    searchAttributes |= VI_RS_FIND_MODE_MDNS;
-  }
-
-  status = viSetAttribute(m_RM, VI_RS_ATTR_TCPIP_FIND_RSRC_MODE, searchAttributes);
-#endif
   ViUInt32 retCnt;
   ViFindList vi;
   ViChar desc[256];
@@ -70,23 +56,6 @@ void VisaResourceManager::addDeviceToFindList(ViFindList vi, const std::string& 
 {
   DeviceInformation deviceInformation;
   deviceInformation.VisaResourceString = desc;
-#ifdef RSVISA_EXTENSION
-  ViStatus status;
-#define GETLXIATTR(_memberName, _attr) ViChar _memberName[512];\
-  status = viGetAttribute(vi, _attr, _memberName);\
-  checkAndThrow(status, "viGetAttribute(" + std::string(#_attr) + ") failed.");\
-  deviceInformation._memberName = _memberName;
-
-  GETLXIATTR(manufacturer, VI_RS_ATTR_LXI_MANF);
-  GETLXIATTR(model, VI_RS_ATTR_LXI_MODEL);
-  GETLXIATTR(serialNumber, VI_RS_ATTR_LXI_SERIAL);
-  GETLXIATTR(version, VI_RS_ATTR_LXI_VERSION);
-  GETLXIATTR(description, VI_RS_ATTR_LXI_DESCRIPTION);
-  GETLXIATTR(hostname, VI_RS_ATTR_LXI_HOSTNAME);
-
-#undef GETLXIATTR
-#endif
-
   parseRsrcEx(desc, deviceInformation);
   deviceList.push_back(deviceInformation);
 }
