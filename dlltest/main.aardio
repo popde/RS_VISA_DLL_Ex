@@ -17,7 +17,7 @@ value={cls="edit";left=218;top=295;right=374;bottom=326;edge=1;z=7}
 import console
 console.open()
   
-var dll = ..raw.loadDll("C:\Users\Huave2\Desktop\VISA_DLL\IdnSample\Release\VISADllEx.dll","VISADllEx");
+var dll = ..raw.loadDll("\res\VISADllEx.dll","VISADllEx");
 VisaRsrc = dll.api("VisaRsrc","int()" );
 VisaGetRsrcString = dll.api("VisaGetRsrcString","string(INT)" );
 VisaInit = dll.api("VisaInit","bool(string)" );
