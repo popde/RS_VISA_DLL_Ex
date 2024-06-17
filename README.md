@@ -13,7 +13,7 @@ VisaRead
 特别注意: 串口初始化完成, 默认波特率是9600 , 8,0,0,1 , 接收中断默认是接收到'\n'即"0x0A"字符,  如果你的设备不是默认配置, 那么就使用 VisaSetAttr() 对设备进行属性设置, 改变波特率和结束符符号.
 
 至于属性是哪个, 可以在文档中找到.
-首发地址: [NI-VISA通信的调用](https://aardio.com.cn/t/474)
+首发地址: [NI-VISA通信的调用](https://chengxu.xyz/t/474)
 
 ![image](https://github.com/popde/RS_VISA_DLL_Ex/blob/main/GIF.gif)
 
